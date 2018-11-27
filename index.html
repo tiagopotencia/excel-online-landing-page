@@ -64,7 +64,7 @@
             <input id="txt-email" style="margin-bottom: 5%" class="form-control" type="email" id="txt-email">
           </div>
           <div class="intro-button mx-auto">
-            <a class="btn btn-primary btn-xl" href="#" onclick="registerAndUnlockVideo()">Estou pronto para aprender!</a>
+            <input type="submit" class="btn btn-primary btn-xl" onclick="registerAndUnlockVideo()" value="Estou pronto para aprender!">
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@
 
       $("#link-mail").attr("href", "mailto:?subject=Uma super dica pra você!&amp;body=Achei esta dica no site da TP Labs: " + window.location.href + ".")
 
-      if (isMobile()){
+      if (isMobile()) {
         $("#div-whatsapp").show();
       } else {
         $("#div-email").show();
@@ -151,38 +151,50 @@
 
     function isMobile() {
       var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        // iOS detection from: http://stackoverflow.com/a/9039885/177710
-        if ((/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) || /android/i.test(userAgent)) {
-            return true;
-        }
-        return false;
+      // iOS detection from: http://stackoverflow.com/a/9039885/177710
+      if ((/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) || /android/i.test(userAgent)) {
+        return true;
+      }
+      return false;
     }
 
     function registerAndUnlockVideo() {
-      var form = new FormData();
-      form.append("value1", $("#txt-email").val());
-      form.append("value2", "excel-landing-page-video1");
 
-      var settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": "https://maker.ifttt.com/trigger/tplabs-landing-page/with/key/inOzhDXbU1YWYPlu41OYHTPUcaQdSd4y3ViinGLO_VO",
-        "method": "POST",
-        "headers": {
-          "authorization": "Basic Og==",
-          "cache-control": "no-cache",
-          "postman-token": "9840ad31-d5a1-577a-ce3d-9475bca1b55a"
-        },
-        "processData": false,
-        "contentType": false,
-        "mimeType": "multipart/form-data",
-        "data": form
+      var email = $("#txt-email").val();
+
+      if (isValidEmail(email) == false){
+        alert("Por favor, insira algum email válido.");
+        return;
       }
 
-      $.ajax(settings).done(function (response) {
-        console.log(response);
-        $("#div-overlay").hide();
-      });
+      $.ajax({
+        url: "https://maker.ifttt.com/trigger/tplabs-landing-page/with/key/inOzhDXbU1YWYPlu41OYHTPUcaQdSd4y3ViinGLO_VO",
+        data: {
+          "value1": email,
+          "value2": "excel-landing-page-video1"
+        },
+        method: "POST",
+        crossDomain: true,
+        dataType: "jsonp",
+        statusCode: {
+          200: function () {
+            $("#div-overlay").hide();
+          }
+        },
+        success: function (data) {
+          console.log(data);
+          $("#div-overlay").hide();
+        },
+        error: function (err) {
+          console.error(err)
+        }
+      })
+
+    }
+
+    function isValidEmail(email) {
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
     }
 
   </script>
