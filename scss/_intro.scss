@@ -2,8 +2,7 @@
   position: relative;
   @media (min-width: 992px) {
     .intro-img {
-      width: 75%;
-      float: right;
+      width: 100%;
     }
     .intro-text {
       left: 0;
@@ -20,7 +19,28 @@
   }
   @media (min-width: 1200px) {
     .intro-text {
-      width: 45%;
+      width: 100%;
     }
+  }
+}
+
+.overlay {
+
+  position: absolute;
+  top: -5px;
+  height: 100%;
+  width: 100%;
+
+  @media (min-width: 992px) {
+    height: 101%;
+  }
+}
+
+.logo {
+  @media (max-width: 992px) {
+    width: 70%;
+  }
+  @media (min-width: 992px) {
+    width: 30%;
   }
 }
